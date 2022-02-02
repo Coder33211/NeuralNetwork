@@ -672,8 +672,8 @@ class Model:
             else:
                 batch_X = X[step * batch_size:(step + 1) * batch_size]
 
-        batch_output = self.forward(batch_X, training=False)
+            batch_output = self.forward(batch_X, training=False)
 
-        output.append(batch_output)
+            output.append(batch_output)
 
         return np.vstack(output)
