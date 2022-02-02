@@ -485,22 +485,11 @@ class Model:
 
         train_steps = 1
 
-        if validation_data is not None:
-            validation_steps = 1
-
-            X_val, y_val = validation_data
-
         if batch_size is not None:
             train_steps = len(X) // batch_size
 
             if train_steps * batch_size < len(X):
                 train_steps += 1
-
-            if validation_data is not None:
-                validation_steps = len(X_val) // batch_size
-
-                if validation_steps * batch_size < len(X_val):
-                    validation_steps += 1
 
         for epoch in range(1, epochs + 1):
             print(f'epoch: {epoch}')
@@ -559,7 +548,7 @@ class Model:
         for layer in self.layers:
             layer.forward(layer.prev.output, training)
 
-        return layer.output
+        return self.layers[-1].output
 
     def backward(self, output, y):
         if self.softmax_classifier_output is not None:
