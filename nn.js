@@ -149,6 +149,10 @@ function mse(yt, yp, d) {
 
   let df = math(2, math(yp, yt, "s"), "m");
 
+  if (typeof yt == "object") {
+    df = math(df, yt.length, "d");
+  }
+
   if (d) {
     return df;
   } else {
@@ -162,6 +166,7 @@ function createValues(r, c) {
   for (let ir = 0; ir < r; ir++) {
     m[ir] = [];
     for (let ic = 0; ic < c; ic++) {
+      // m[ir][ic] = Math.random() - 0.5;
       m[ir][ic] = Math.random() - 0.5;
     }
   }
@@ -239,14 +244,33 @@ class Model {
           o = this.layers[l].forward(o);
         }
 
-        let err = this.loss(y[j], o, false);
-        let errd = this.loss(y[j], o, true);
+        let err;
+        let errd;
+
+        if (typeof y[j] == "object") {
+          err = this.loss([y[j]], o, false);
+          errd = this.loss([y[j]], o, true);
+        } else {
+          err = this.loss(y[j], o, false);
+          errd = this.loss(y[j], o, true);
+        }
 
         me += err;
-        if (Math.round(o[0][0]) == y[j]) {
-          a.push(1);
+
+        if (typeof y[j] == "object") {
+          if (
+            y[j].indexOf(Math.max(...y[j])) == o[0].indexOf(Math.max(...o[0]))
+          ) {
+            a.push(1);
+          } else {
+            a.push(0);
+          }
         } else {
-          a.push(0);
+          if (Math.round(y[j]) == Math.round(o[0][0])) {
+            a.push(1);
+          } else {
+            a.push(0);
+          }
         }
 
         for (let l = this.layers.length - 1; l >= 0; l--) {
@@ -260,6 +284,7 @@ class Model {
       console.log("Epoch:", i + 1);
       console.log("Error:", me);
       console.log("Accuracy:", a);
+      console.log("Accuracy Percent: " + a * 100 + "%");
     }
   }
 
