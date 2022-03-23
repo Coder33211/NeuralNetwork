@@ -150,7 +150,7 @@ function mse(yt, yp, d) {
   let df = math(2, math(yp, yt, "s"), "m");
 
   if (typeof yt == "object") {
-    df = math(df, yt.length, "d");
+    df = math(df, yt[0].length, "d");
   }
 
   if (d) {
