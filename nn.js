@@ -144,6 +144,28 @@ function tanh(x, d) {
   }
 }
 
+function relu(x, d) {
+  let f = math(0, x, "max");
+
+  let df = [];
+
+  for (let r = 0; r < x.length; r++) {
+    df[r] = [];
+    for (let c = 0; c < x[0].length; c++) {
+      if (x[r][c] > 0) {
+        df[r][c] = 1;
+      } else {
+        df[r][c] = 0;
+      }
+    }
+  }
+  if (d) {
+    return df;
+  } else {
+    return f;
+  }
+}
+
 function mse(yt, yp, d) {
   let f = mean(math(math(yp, yt, "s"), 2, "p"));
 
